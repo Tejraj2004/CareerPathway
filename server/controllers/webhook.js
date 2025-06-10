@@ -6,7 +6,7 @@ import User from "../models/User.js";
 
 //API controller function to Manage clerk user with database
 //write export to use it in any other files
-export const clerkWebhooks = async (requestAnimationFrame,res) =>{
+export const clerkWebhooks = async (req,res) =>{
 try {
     //1. will write logic which will verify clerk webhooks and save the data of user in backend whenever a user is created, deleted or updated
     
@@ -14,7 +14,7 @@ try {
     const whook = new Webhook (process.env.CLERK_WEBHOOK_SECRET)
 
     // verifying Headers..after getting user id through the webhook secret..verifying its authenticity by some properties like signature..like Narendra modi signature is fixed or permanent , no one else can use this
-    await whook.verify(JSON.stringify(request.body),{
+    await whook.verify(JSON.stringify(req.body),{
         "svix-id" : req.headers["svix-id"],
         "svix-timestamp" : req.headers["svix-timestamp"],
         "svix-signature": req.headers["svix-signature"]

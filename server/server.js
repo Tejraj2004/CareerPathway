@@ -40,12 +40,17 @@ import 'dotenv/config';
 import connectDB from './config/db.js';
 import * as Sentry from "@sentry/node";
 import { clerkWebhooks } from './controllers/webhook.js';
+import companyRoutes from './routes/companyRoutes.js'
+import connectCloudinary from './config/cloudinary.js';
+
 
 // Initialise Express
 const app = express();
 
 // Connect to MongoDB
-await connectDB();
+await connectDB()
+await connectCloudinary()
+
 
 // Middleware
 app.use(cors());
@@ -64,6 +69,7 @@ app.get("/debug-sentry", function mainHandler(req, res) {
 });
 
 app.post('/webhooks', clerkWebhooks);
+app.use('/api/company',companyRoutes)
 
 // Error handler
 Sentry.setupExpressErrorHandler(app);

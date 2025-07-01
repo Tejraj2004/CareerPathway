@@ -26,7 +26,7 @@ export const applyForJob = async (req,res) =>{
      
      const {jobId} = req.body
 
-     const userId = req.auth.userId
+     const { userId } = await req.auth();
 
      try {
         const isAlreadyApplied = await JobApplication.find({jobId,userId})
@@ -52,6 +52,7 @@ export const applyForJob = async (req,res) =>{
         res.json({success:false, message:error.message})
      }
 }
+
 
 //Get user applied application
 export const getUserJobApplications = async (req,res) =>{

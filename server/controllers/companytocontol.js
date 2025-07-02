@@ -125,7 +125,22 @@ export const postJob= async(req,res) =>{
 
 //get Company Job Applicants
 export const getCompanyJobApplicants = async(req,res) =>{
+    try {
+        const companyId = req.company._id
 
+        //find job applications for the user and populate related data
+        const applications = await JobApplication.find({companyId})
+        
+        .populate('userId','name image resume')
+        .populate('jobId' ,'title location category level salary')
+        .exec()
+        
+        return res.json({success:true, applications})
+    } 
+    
+    catch (error) {
+        res.json({success:false, message:error.message})
+    }
 }
 
 //get Company Posted Jobs
@@ -138,7 +153,7 @@ export const getCompanyPostedJobs = async(req,res) =>{
         // Adding No. of applicants info in data
 
         const jobsData = await Promise.all(jobs.map(async (job) =>{
-            const applicants = await JobApplication.find({jobid: job._id});
+            const applicants = await JobApplication.find({jobId: job._id});
             return {...job.toObject(),applicants:applicants.length}
         }))
 
@@ -152,7 +167,17 @@ export const getCompanyPostedJobs = async(req,res) =>{
 
 // change job application status
 export const ChangeJobApplicationStatus = async(req,res) =>{
+    try {
+    const {id, status} = req.body
 
+    //Find Job application and update status
+    await JobApplication.findOneAndUpdate({_id : id},{status})
+    
+    res.json({success: true, message: 'Status Changed'})
+        
+    } catch (error) {
+        res.json({success:false, message:error.message})
+    }
 }
 
 //change visibility

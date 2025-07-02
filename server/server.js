@@ -41,7 +41,7 @@ import connectDB from './config/db.js';
 import * as Sentry from "@sentry/node";
 import { clerkWebhooks } from './controllers/webhook.js';
 import companyRoutes from './routes/companyRoutes.js'
-import connectCloudinary from './config/cloudinary.js';
+import cloudinary from './config/cloudinary.js';
 import jobRoutes from './routes/jobRoutes.js'
 import userRoutes from './routes/userRoutes.js'
 import {clerkMiddleware} from '@clerk/express'
@@ -52,7 +52,7 @@ const app = express();
 
 // Connect to MongoDB
 await connectDB()
-await connectCloudinary()
+
 
 
 // Middleware

@@ -1,6 +1,8 @@
+import cloudinary from "../config/cloudinary.js"
 import JobApplication from "../models/JobApplication.js"
 import Job from "../models/ModelJob.js"
 import User from "../models/User.js"
+
 
 //Get user data
 export const getUserData = async(req,res) =>{
@@ -31,7 +33,7 @@ export const applyForJob = async (req,res) =>{
      try {
         const isAlreadyApplied = await JobApplication.find({jobId,userId})
 
-        if(!isAlreadyApplied.length > 0){
+        if(isAlreadyApplied.length > 0){
             return res.json({success:false, message:'Already Applied'})
         }
         const jobData = await Job.findById(jobId)
@@ -74,15 +76,16 @@ export const getUserJobApplications = async (req,res) =>{
     }
 }
 
-//Get user applied application
+//Update user profile (resume)
 export const updateUserResume = async (req,res) =>{
      try {
         const userId = req.auth.userId
-        const resumeFile = req.resumeFile
+        const resumeFile = req.file
         const userData = await User.findById(userId)
 
         if(resumeFile){
-            const resumeUpload = await connectCloudinary.uploader.upload(resumeFile)
+            const resumeUpload = await cloudinary.uploader.upload(resumeFile.path)
+
             userData.resume = resumeUpload.secure_url
         }
 
@@ -94,4 +97,9 @@ export const updateUserResume = async (req,res) =>{
         res.json({success:false, message:error.message})
      }
 }
+
+
+
+
+
 
